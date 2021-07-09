@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Route } from "react-router-dom";
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
@@ -16,15 +16,20 @@ const QuoteDetail: FunctionComponent = () => {
 
   return (
     <div>
-      {quote ? (
+      {quote && (
         <HighlightedQuote
           id={quote.id}
           text={quote.text}
           author={quote.author}
         />
-      ) : (
-        "No Quote found"
       )}
+      <Route path={`/quotes/${quoteId}`} exact>
+        <div className="centered">
+          <Link className="btn--flat" to={`/quotes/${quoteId}/comments`}>
+            Load Comments
+          </Link>
+        </div>
+      </Route>
       <Route path={`/quotes/${quoteId}/comments`} component={Comments} />
     </div>
   );
