@@ -5,6 +5,7 @@ import { QuoteType } from "../../types";
 import classes from "./QuoteItem.module.css";
 
 const QuoteItem: FunctionComponent<QuoteType> = ({ text, author, id }) => {
+  
   return (
     <li className={classes.item}>
       <figure>

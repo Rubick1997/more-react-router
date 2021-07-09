@@ -4,17 +4,21 @@ import { QuoteType } from "../../types";
 import QuoteItem from "./QuoteItem";
 import classes from "./QuoteList.module.css";
 
-const sortQuotes = (quotes: QuoteType[], ascending: boolean) => {
-  return quotes.sort((quoteA, quoteB) => {
-    if (ascending) {
-      return quoteA.id > quoteB.id ? 1 : -1;
-    } else {
-      return quoteA.id < quoteB.id ? 1 : -1;
-    }
-  });
+const sortQuotes = (quotes: QuoteType[] | null, ascending: boolean) => {
+  if (quotes !== null) {
+    return quotes.sort((quoteA, quoteB) => {
+      if (ascending) {
+        return quoteA.id > quoteB.id ? 1 : -1;
+      } else {
+        return quoteA.id < quoteB.id ? 1 : -1;
+      }
+    });
+  }
 };
 
-const QuoteList: FunctionComponent<{ quotes: QuoteType[] }> = ({ quotes }) => {
+const QuoteList: FunctionComponent<{ quotes: QuoteType[] | null }> = ({
+  quotes,
+}) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -23,7 +27,10 @@ const QuoteList: FunctionComponent<{ quotes: QuoteType[] }> = ({ quotes }) => {
   const sortedQuotes = sortQuotes(quotes, isSortingAscending);
 
   const changeSortingHandler = () => {
-    history.push(`/quotes?sort=${isSortingAscending ? "desc" : "asc"}`);
+    history.push({
+      pathname: location.pathname,
+      search: `?sort=${isSortingAscending ? "desc" : "asc"}`,
+    });
   };
 
   return (
@@ -34,14 +41,15 @@ const QuoteList: FunctionComponent<{ quotes: QuoteType[] }> = ({ quotes }) => {
         </button>
       </div>
       <ul className={classes.list}>
-        {sortedQuotes.map((quote) => (
-          <QuoteItem
-            key={quote.id}
-            id={quote.id}
-            author={quote.author}
-            text={quote.text}
-          />
-        ))}
+        {sortedQuotes &&
+          sortedQuotes.map((quote) => (
+            <QuoteItem
+              key={quote.id}
+              id={quote.id}
+              author={quote.author}
+              text={quote.text}
+            />
+          ))}
       </ul>
     </Fragment>
   );
